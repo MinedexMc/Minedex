@@ -1,5 +1,4 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -15,7 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
     }
 
     .container {
@@ -88,6 +87,22 @@
       background: #555;
     }
 
+    .secondary-btn {
+      background: #444;
+    }
+
+    .secondary-btn:hover {
+      background: #666;
+    }
+
+    #savedList {
+      margin-top: 15px;
+      font-size: 14px;
+      text-align: left;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
     .footer {
       font-size: 12px;
       color: gray;
@@ -108,10 +123,11 @@
   <div class="tagline">Never run out of Minecraft ideas</div>
 
   <select id="category">
-    <option>Hardcore</option>
-    <option>Funny</option>
-    <option>Challenge</option>
-    <option>Build</option>
+    <option value="all">All</option>
+    <option value="hardcore">Hardcore</option>
+    <option value="funny">Funny</option>
+    <option value="challenge">Challenge</option>
+    <option value="build">Build</option>
   </select>
 
   <button onclick="generateIdea()">🎲 Generate Idea</button>
@@ -119,21 +135,59 @@
   <div id="idea">Click to generate your first idea</div>
 
   <button class="copy-btn" onclick="copyIdea()">📋 Copy Idea</button>
+  <button class="secondary-btn" onclick="saveIdea()">⭐ Save Idea</button>
+  <button class="secondary-btn" onclick="showSaved()">📜 View Saved</button>
+  <button class="secondary-btn" onclick="clearSaved()">🧹 Clear Saved</button>
+
+  <div id="savedList"></div>
 
   <div class="footer">© 2026 Minedex</div>
 </div>
 
+<!-- SOUND -->
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+
 <script>
+  const ideas = {
+    hardcore: [
+      "Survive 100 Days in Hardcore with 1 Heart",
+      "Hardcore but no armor allowed"
+    ],
+    funny: [
+      "Minecraft but I can't stop jumping",
+      "Minecraft but everything is upside down"
+    ],
+    challenge: [
+      "Beat Minecraft using only wooden tools",
+      "Speedrun but I can't touch grass"
+    ],
+    build: [
+      "Build the safest house ever",
+      "Build an underground secret base"
+    ]
+  };
+
   const starters = ["Minecraft but", "I tried", "Can I", "Surviving", "100 Days"];
   const twists = ["everything is random", "mobs are OP", "I can't touch grass", "with only 1 heart", "in a tiny world"];
   const goals = ["beat the game", "build a mega base", "survive", "escape", "win"];
 
   function generateIdea() {
-    const s = starters[Math.floor(Math.random() * starters.length)];
-    const t = twists[Math.floor(Math.random() * twists.length)];
-    const g = goals[Math.floor(Math.random() * goals.length)];
+    document.getElementById("clickSound").play();
 
-    document.getElementById("idea").innerText = `${s} ${t} to ${g}`;
+    const category = document.getElementById("category").value;
+    let idea;
+
+    if (category === "all") {
+      const s = starters[Math.floor(Math.random() * starters.length)];
+      const t = twists[Math.floor(Math.random() * twists.length)];
+      const g = goals[Math.floor(Math.random() * goals.length)];
+      idea = `${s} ${t} to ${g}`;
+    } else {
+      const arr = ideas[category];
+      idea = arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    document.getElementById("idea").innerText = idea;
   }
 
   function copyIdea() {
@@ -146,6 +200,39 @@
 
     navigator.clipboard.writeText(text);
     alert("Copied!");
+  }
+
+  let savedIdeas = JSON.parse(localStorage.getItem("ideas")) || [];
+
+  function saveIdea() {
+    const idea = document.getElementById("idea").innerText;
+
+    if (idea.includes("Click")) {
+      alert("Generate an idea first!");
+      return;
+    }
+
+    savedIdeas.push(idea);
+    localStorage.setItem("ideas", JSON.stringify(savedIdeas));
+    alert("Idea saved ⭐");
+  }
+
+  function showSaved() {
+    const list = document.getElementById("savedList");
+
+    if (savedIdeas.length === 0) {
+      list.innerHTML = "No saved ideas yet.";
+      return;
+    }
+
+    list.innerHTML = savedIdeas.map(i => `• ${i}`).join("<br>");
+  }
+
+  function clearSaved() {
+    savedIdeas = [];
+    localStorage.removeItem("ideas");
+    document.getElementById("savedList").innerHTML = "";
+    alert("Cleared!");
   }
 </script>
 
