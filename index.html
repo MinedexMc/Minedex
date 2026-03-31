@@ -1,240 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minedex</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minedex</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: radial-gradient(circle at top, #1f4037, #0f2027);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
+<style>
+:root {
+  --bg: #0f2027;
+  --card: rgba(255,255,255,0.05);
+  --text: white;
+  --secondary: #222;
+  --primary: #00ccff;
+}
 
-    .container {
-      width: 90%;
-      max-width: 420px;
-      padding: 25px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(15px);
-      box-shadow: 0 0 30px rgba(0,255,150,0.2);
-      text-align: center;
-      animation: fadeIn 1s ease;
-    }
+.light {
+  --bg: #f4f4f4;
+  --card: rgba(0,0,0,0.05);
+  --text: black;
+  --secondary: #ddd;
+  --primary: #00aaff;
+}
 
-    h1 {
-      font-size: 28px;
-      color: #00ffcc;
-      margin-bottom: 5px;
-    }
+body {
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition:0.3s;
+}
 
-    .tagline {
-      font-size: 14px;
-      color: #bbb;
-      margin-bottom: 20px;
-    }
+/* NAV */
+.nav {
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  background:var(--card);
+  backdrop-filter:blur(10px);
+}
 
-    select, button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      margin-top: 10px;
-      font-size: 15px;
-    }
+.logo {color:#00ccaa;font-weight:bold;}
+.toggle {cursor:pointer; transition:0.3s;}
+.toggle:hover {transform:scale(1.2);}
 
-    select {
-      background: #222;
-      color: white;
-    }
+/* HERO */
+.hero {
+  text-align:center;
+  padding:50px 20px;
+  animation:fadeUp 1s ease;
+}
 
-    button {
-      background: linear-gradient(45deg, #00ffcc, #00ccff);
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+.hero h1 {font-size:32px;}
+.hero button {
+  margin-top:25px;
+  padding:14px 25px;
+  border:none;
+  border-radius:12px;
+  background:var(--primary);
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.2s;
+}
+.hero button:hover {transform:scale(1.05);}
 
-    button:hover {
-      transform: scale(1.05);
-    }
+/* APP */
+.container {max-width:500px;margin:auto;padding:20px;}
 
-    #idea {
-      margin-top: 20px;
-      padding: 18px;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.6);
-      font-size: 16px;
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.3s;
-    }
+.card {
+  background:var(--card);
+  padding:15px;
+  border-radius:15px;
+  margin-top:15px;
+  animation:fadeUp 0.7s ease;
+}
 
-    .copy-btn {
-      background: #333;
-    }
+/* IDEA */
+.idea {
+  background:var(--secondary);
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  transition:0.2s, box-shadow 0.2s;
+}
+.idea:hover {
+  transform:scale(1.02);
+  box-shadow:0 0 15px var(--primary);
+}
 
-    .copy-btn:hover {
-      background: #555;
-    }
+.row {display:flex; gap:10px; margin-top:5px;}
+button {flex:1; padding:8px; border:none; border-radius:8px; cursor:pointer; transition:0.2s;}
+button:hover {transform:scale(1.05);}
 
-    .secondary-btn {
-      background: #444;
-    }
+/* LOGIN */
+.login {text-align:center;margin-top:60px;}
+input {padding:10px;width:80%;margin-top:10px;border-radius:8px;border:none;}
 
-    .secondary-btn:hover {
-      background: #666;
-    }
+/* FOOTER */
+.footer {text-align:center;margin:30px 0;font-size:12px;color:#888;}
 
-    #savedList {
-      margin-top: 15px;
-      font-size: 14px;
-      text-align: left;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-
-    .footer {
-      font-size: 12px;
-      color: gray;
-      margin-top: 20px;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(20px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-  </style>
+/* ANIMATIONS */
+@keyframes fadeUp {from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+</style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>🎮 Minedex</h1>
-  <div class="tagline">Never run out of Minecraft ideas</div>
-
-  <select id="category">
-    <option value="all">All</option>
-    <option value="hardcore">Hardcore</option>
-    <option value="funny">Funny</option>
-    <option value="challenge">Challenge</option>
-    <option value="build">Build</option>
-  </select>
-
-  <button onclick="generateIdea()">🎲 Generate Idea</button>
-
-  <div id="idea">Click to generate your first idea</div>
-
-  <button class="copy-btn" onclick="copyIdea()">📋 Copy Idea</button>
-  <button class="secondary-btn" onclick="saveIdea()">⭐ Save Idea</button>
-  <button class="secondary-btn" onclick="showSaved()">📜 View Saved</button>
-  <button class="secondary-btn" onclick="clearSaved()">🧹 Clear Saved</button>
-
-  <div id="savedList"></div>
-
-  <div class="footer">© 2026 Minedex</div>
+<div class="nav">
+  <div class="logo">🎮 Minedex</div>
+  <div>
+    <span class="toggle" onclick="toggleTheme()">🌙</span>
+    <span id="userDisplay"></span>
+  </div>
 </div>
 
-<!-- SOUND -->
+<!-- LOGIN -->
+<div id="loginPage" class="login">
+  <h2>Enter your name</h2>
+  <input id="username">
+  <br>
+  <button class="primary" onclick="login()">Start</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+<div class="hero">
+  <h1>Generate Minecraft Ideas</h1>
+  <button class="primary" onclick="generateIdeas()">Generate</button>
+</div>
+
+<div class="container">
+<div class="card"><h3>Ideas</h3><div id="ideas"></div></div>
+<div class="card"><h3>Saved</h3><div id="saved"></div></div>
+<div class="card"><h3>Trending</h3><div id="trending"></div></div>
+</div>
+
+</div>
+
+<div class="footer">© 2026 Minedex</div>
+
+<!-- SOUNDS -->
 <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="saveSound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3"></audio>
 
 <script>
-  const ideas = {
-    hardcore: [
-      "Survive 100 Days in Hardcore with 1 Heart",
-      "Hardcore but no armor allowed"
-    ],
-    funny: [
-      "Minecraft but I can't stop jumping",
-      "Minecraft but everything is upside down"
-    ],
-    challenge: [
-      "Beat Minecraft using only wooden tools",
-      "Speedrun but I can't touch grass"
-    ],
-    build: [
-      "Build the safest house ever",
-      "Build an underground secret base"
-    ]
-  };
+/* THEME */
+let theme = localStorage.getItem("theme");
+if(theme==="light") document.body.classList.add("light");
 
-  const starters = ["Minecraft but", "I tried", "Can I", "Surviving", "100 Days"];
-  const twists = ["everything is random", "mobs are OP", "I can't touch grass", "with only 1 heart", "in a tiny world"];
-  const goals = ["beat the game", "build a mega base", "survive", "escape", "win"];
+function toggleTheme(){
+  document.body.classList.toggle("light");
+  localStorage.setItem("theme",document.body.classList.contains("light")?"light":"dark");
+}
 
-  function generateIdea() {
-    document.getElementById("clickSound").play();
+/* LOGIN */
+let user = localStorage.getItem("user");
+if(user) startApp();
 
-    const category = document.getElementById("category").value;
-    let idea;
+function login(){
+  const input=document.getElementById("username");
+  user=input.value.trim();
+  if(!user) return alert("Enter name");
+  localStorage.setItem("user",user);
+  startApp();
+}
 
-    if (category === "all") {
-      const s = starters[Math.floor(Math.random() * starters.length)];
-      const t = twists[Math.floor(Math.random() * twists.length)];
-      const g = goals[Math.floor(Math.random() * goals.length)];
-      idea = `${s} ${t} to ${g}`;
-    } else {
-      const arr = ideas[category];
-      idea = arr[Math.floor(Math.random() * arr.length)];
-    }
+function startApp(){
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("app").style.display="block";
+  document.getElementById("userDisplay").innerText="👤 "+user;
+}
 
-    document.getElementById("idea").innerText = idea;
+/* IDEA SYSTEM */
+const starters=["Minecraft but","I tried","100 Days"];
+const twists=["everything is random","no jumping","1 heart","OP mobs"];
+const goals=["beat the game","survive","win"];
+
+function makeIdea(){
+  return `${starters[Math.random()*starters.length|0]} ${twists[Math.random()*twists.length|0]} to ${goals[Math.random()*goals.length|0]}`;
+}
+
+function playClick(){
+  document.getElementById("clickSound").currentTime=0;
+  document.getElementById("clickSound").play();
+}
+
+function playSave(){
+  document.getElementById("saveSound").currentTime=0;
+  document.getElementById("saveSound").play();
+}
+
+function generateIdeas(){
+  playClick();
+  const box=document.getElementById("ideas");
+  box.innerHTML="";
+  for(let i=0;i<5;i++){
+    const idea=makeIdea();
+    box.innerHTML += `
+    <div class="idea">
+      ${idea}
+      <div class="row">
+        <button onclick="saveIdea('${idea}')">⭐</button>
+        <button onclick="likeIdea('${idea}')">🔥</button>
+      </div>
+    </div>`;
   }
+}
 
-  function copyIdea() {
-    const text = document.getElementById("idea").innerText;
+/* SAVE */
+let saved=JSON.parse(localStorage.getItem("saved"))||[];
 
-    if (text.includes("Click")) {
-      alert("Generate an idea first!");
-      return;
-    }
+function saveIdea(i){
+  saved.push(i);
+  localStorage.setItem("saved",JSON.stringify(saved));
+  renderSaved();
+  playSave();
+}
 
-    navigator.clipboard.writeText(text);
-    alert("Copied!");
-  }
+function renderSaved(){
+  document.getElementById("saved").innerHTML=
+  saved.map((i,idx)=>`<div class="idea">${i}<button onclick="removeIdea(${idx})">❌</button></div>`).join("");
+}
 
-  let savedIdeas = JSON.parse(localStorage.getItem("ideas")) || [];
+function removeIdea(i){
+  saved.splice(i,1);
+  localStorage.setItem("saved",JSON.stringify(saved));
+  renderSaved();
+}
 
-  function saveIdea() {
-    const idea = document.getElementById("idea").innerText;
+/* TRENDING */
+let trending=[];
+function likeIdea(i){
+  trending.push(i);
+  renderTrending();
+}
+function renderTrending(){
+  document.getElementById("trending").innerHTML=
+  trending.map(i=>`<div class="idea">${i}</div>`).join("");
+}
 
-    if (idea.includes("Click")) {
-      alert("Generate an idea first!");
-      return;
-    }
-
-    savedIdeas.push(idea);
-    localStorage.setItem("ideas", JSON.stringify(savedIdeas));
-    alert("Idea saved ⭐");
-  }
-
-  function showSaved() {
-    const list = document.getElementById("savedList");
-
-    if (savedIdeas.length === 0) {
-      list.innerHTML = "No saved ideas yet.";
-      return;
-    }
-
-    list.innerHTML = savedIdeas.map(i => `• ${i}`).join("<br>");
-  }
-
-  function clearSaved() {
-    savedIdeas = [];
-    localStorage.removeItem("ideas");
-    document.getElementById("savedList").innerHTML = "";
-    alert("Cleared!");
-  }
+renderSaved();
 </script>
-
 </body>
 </html>
